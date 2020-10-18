@@ -43,11 +43,14 @@ def get_temperatures():
 
 @app.route('/temperatures/select/v2.0', methods=['GET'])
 def get_temperatures_select():
-    if not request.json:
-        return get_temperatures()
+    #if not request.json:
+    #    return get_temperatures()
     print(request.json)
-    start = request.json["start"]
-    end = request.json["end"]
+    #start = request.json["start"]
+    #end = request.json["end"]
+    start = request.args.get('start')
+    end = request.args.get('end')
+    print(start, end)
     c = get_db().cursor()
     c.row_factory = dict_factory
     c.execute('SELECT * FROM temperatures WHERE date BETWEEN ? AND ?', (start, end))
