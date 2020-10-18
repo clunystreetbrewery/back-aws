@@ -4,10 +4,12 @@ from flask import request
 import time
 import sqlite3
 from flask_httpauth import HTTPBasicAuth
+from flask_cors import CORS
 auth = HTTPBasicAuth()
 
 
 app = Flask(__name__)
+CORS(app)
 
 DATABASE = '/home/ec2-user/webapp/temperatures.db'
 
