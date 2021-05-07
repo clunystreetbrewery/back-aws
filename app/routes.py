@@ -10,19 +10,17 @@ from flask_cors import CORS
 from flask_login import LoginManager
 from flask_crontab import Crontab
 
-
+import jwt
 from flask_login import current_user, login_user
 from app.models import User, Raspberry
 
-import jwt
+
 import datetime
 
 import subprocess
 import sys
 
 import json
-
-
 
 
 
@@ -123,12 +121,22 @@ def encode_auth_token(user_id):
     except Exception as e:
         return e
 
+
+def decode_auth_token(auth_token):
+    try:
+        payload = jwt.decode(auth_token, app.config.get('SECRET_KEY'), algorithms=["HS256"])
+        return payload['sub']
+    except jwt.ExpiredSignatureError:
+        return 'Signature expired. Please log in again.'
+    except jwt.InvalidTokenError:
+        return 'Invalid token. Please log in again.'
+
 def check_authorisation(request):
     auth_header = request.headers.get('Authorization')
     if auth_header:
+        print(auth_header)
         auth_token = auth_header.split(" ")[1]
-        resp = User.decode_auth_token(auth_token[2:-1])
-        print(resp)
+        resp = decode_auth_token(auth_token)
         if isinstance(resp, int):
             return True
         else:
@@ -136,6 +144,7 @@ def check_authorisation(request):
     else:
         #return jsonify({'message':'Failed'}), 401
         return False
+
 
 
 @app.route('/temperatures/v2.0', methods=['GET'])
@@ -158,12 +167,6 @@ def insert_temperature():
 def get_temperatures_select():
     start = request.args.get('start')
     end = request.args.get('end')
-
-    auth_header = request.headers.get('Authorization')
-    print(auth_header)
-    if auth_header:
-        auth_token = auth_header.split(" ")[1]
-        resp = User.decode_auth_token(auth_token[2:-1])
     if start is None:
         return get_temperatures()
     c = get_db().cursor()
@@ -215,8 +218,6 @@ def incubator():
         rasp.set_status({"error" : error_message})
         db.session.commit()
         return jsonify(status), 200
-
-
     is_incubator_running = False
     if len(result) == 0:
         is_incubator_running = False
@@ -248,10 +249,6 @@ def incubator():
 
 
 
-
-
-
-
 @app.route('/login', methods=['POST'])
 def login():
     json = request.get_json()
@@ -262,10 +259,9 @@ def login():
         print('Invalid username or password')
         return jsonify({"error" : "Invalid username or password"}), 401
     token = encode_auth_token(user.id)
-    print("token ",token)
+    print("token encoded |" + str(token) + "|")
     #print(type(token))
     return jsonify({"token" : str(token)})
-
 
 
 @auth.login_required
@@ -281,7 +277,6 @@ def get_password(username):
     if username == 'rasp':
         return temperatures_db_password
     return None
-
 
 @auth.error_handler
 def unauthorized():
