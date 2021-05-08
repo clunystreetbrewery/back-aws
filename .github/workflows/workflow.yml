@@ -20,7 +20,6 @@ jobs:
         port: 22
         envs: SECRET_KEY,TEMPERATURES_DB_PASSWORD,RASP_ADDRESS,RASP_PORT
         script: |
-          pkill -9 -f webapp.py
           cd /home/ec2-user/webapp
           git pull origin master
           /home/ec2-user/webapp/webapp.py &> /home/ec2-user/webapp/Logs/webapp_logs.txt
