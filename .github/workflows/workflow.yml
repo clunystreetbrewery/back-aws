@@ -22,4 +22,4 @@ jobs:
         script: |
           cd /home/ec2-user/webapp
           git pull origin master
-          /home/ec2-user/webapp/webapp.py &> /home/ec2-user/webapp/Logs/webapp_logs.txt
+          /home/ec2-user/webapp/webapp.py &> /home/ec2-user/webapp/Logs/webapp_logs.txt &
