@@ -3,7 +3,8 @@ on:
   push:
     branches: [ master ]
 
-jobs:  continuous-integration:
+jobs:  
+  continuous-integration:
     runs-on: ubuntu-latest
     steps:
       # Step 1
