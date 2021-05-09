@@ -1,4 +1,4 @@
-#!/home/ec2-user/webapp/flask/bin/python
+#!/home/ec2-user/webapp/environment/bin/python
 from app import app
 
 
