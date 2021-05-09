@@ -282,8 +282,8 @@ def get_password(username):
 def unauthorized():
     return make_response(jsonify({'error': 'Unauthorized access'}), 401)
 
-@crontab.job(minute="0")
-def my_scheduled_job():
-    output = request_temperature()
+#@crontab.job(minute="0")
+#def my_scheduled_job():
+#    output = request_temperature()
 
 
