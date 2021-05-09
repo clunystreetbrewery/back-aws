@@ -23,4 +23,6 @@ jobs:
           pkill -15 webapp.py
           cd /home/ec2-user/webapp
           git pull origin master
+          source environment/bin/activate
+          pip install -r requirements.txt 
           /home/ec2-user/webapp/webapp.py &> /home/ec2-user/webapp/Logs/webapp_logs.txt &
