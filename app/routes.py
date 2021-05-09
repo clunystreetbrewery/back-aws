@@ -217,6 +217,7 @@ def incubator():
         print(error_message)
         rasp.set_status({"error" : error_message})
         db.session.commit()
+        sys.stdout.flush()
         return jsonify(status), 200
     is_incubator_running = False
     if len(result) == 0:
