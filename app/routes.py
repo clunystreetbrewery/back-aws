@@ -215,6 +215,7 @@ def incubator():
     print("ssh incubator", result, error)
     if len(error) > 0:
         error_message = "".join([line.decode() for line in error])
+        print("error_message", error_message)
         if error_message == "no server running on /tmp/tmux-1000/default\n":
             is_incubator_running = False
         else:
