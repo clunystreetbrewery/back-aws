@@ -145,7 +145,10 @@ def check_authorisation(request):
         #return jsonify({'message':'Failed'}), 401
         return False
 
-
+def set_rasp_status(rasp, json_status):
+    rasp.set_status(json_status)
+    db.session.commit()
+    sys.stdout.flush()
 
 @app.route('/temperatures/v2.0', methods=['GET'])
 def get_temperatures():
@@ -214,12 +217,11 @@ def incubator():
     print("ssh incubator", result, error)
     if len(error) > 0:
         error_message = "".join([line.decode() for line in error])
-        print(error_message)
-        rasp.set_status({"error" : error_message})
-        db.session.commit()
-        sys.stdout.flush()
-        return jsonify(status), 200
-    is_incubator_running = False
+        set_rasp_status({"error" : error_message})
+        if error_message == "no server running on /tmp/tmux-1000/default":
+            is_incubator_running = False
+        else:
+            return jsonify(status), 200
     if len(result) == 0:
         is_incubator_running = False
     elif "incubator" in str(result[0]):
