@@ -230,21 +230,20 @@ def incubator():
     switch = request.args.get('switch')
     if switch is not None:
         if switch == "true":
+            print("swith on")
             command = "tmux new-session -d -s incubator 'python " + raspberry_workspace + "TemperatureHandler.py'"
             print("command", command)
             result, error = ssh_to_raspberry(command)
-            print("result", result)
-            print("error", error)
+            print("result, error", result, error)
             status["is_incubator_running"] = True
         elif switch == "false":
+            print("switch off")
             command = "tmux kill-session -t incubator"
             result, error = ssh_to_raspberry(command)
-            print("result", result)
-            print("error", error)
+            print("result, error", result, error)
             command = "python " + raspberry_workspace + "shutdown_everything.py"
             result, error = ssh_to_raspberry(command)
-            print("result", result)
-            print("error", error)
+            print("result, error", result, error)
             status["is_incubator_running"] = False
     rasp.set_status(status)
     db.session.commit()
