@@ -203,6 +203,7 @@ def check_global_state():
 
 @app.route('/incubator', methods=['GET'])
 def incubator():
+    print("incubator")
     authentification = check_authorisation(request)
     if not authentification:
         return jsonify(message = "require identification"), 401
@@ -225,6 +226,7 @@ def incubator():
         is_incubator_running = False
     elif "incubator" in str(result[0]):
         is_incubator_running = True
+
     status = {}
     status["is_incubator_running"] = is_incubator_running
     switch = request.args.get('switch')
