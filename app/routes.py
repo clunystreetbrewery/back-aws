@@ -47,8 +47,8 @@ def ssh_to_raspberry(command):
                            shell=False,
                            stdout=subprocess.PIPE,
                            stderr=subprocess.PIPE)
-    result = ssh.stdout.readlines()
-    error = ssh.stderr.readlines()
+    result = "".join(ssh.stdout.readlines())
+    error = "".join(ssh.stderr.readlines())
     return result, error
 
 def dict_factory(cursor, row):
@@ -95,12 +95,9 @@ def send_target_temperature_to_rasp(temp):
     result, error = ssh_to_raspberry(command)
     print("ssh incubator", result, error)
     if len(error) > 0:
-        error_message = "".join([line.decode() for line in error])
-        print("ERROR: %s" % error_message)
-        # TODO faire fonction pour changer le status du rasp
-        rasp = Raspberry.query.filter_by(id=1).first()
-        rasp.set_status({"error" : error_message})
-        db.session.commit()
+        #error_message = "".join([line.decode() for line in error])
+        print("ERROR: %s" % error)
+        set_rasp_status({"error" : error})
         return False
     else:
         return True
@@ -145,7 +142,8 @@ def check_authorisation(request):
         #return jsonify({'message':'Failed'}), 401
         return False
 
-def set_rasp_status(rasp, json_status):
+def set_rasp_status(json_status):
+    rasp = Raspberry.query.filter_by(id=1).first()
     rasp.set_status(json_status)
     db.session.commit()
     sys.stdout.flush()
@@ -220,7 +218,7 @@ def incubator():
         if error_message == "no server running on /tmp/tmux-1000/default\n":
             is_incubator_running = False
         else:
-            set_rasp_status(rasp, {"error" : error_message})
+            set_rasp_status({"error" : error_message})
             return jsonify(status), 501
     if len(result) == 0:
         is_incubator_running = False
@@ -248,8 +246,9 @@ def incubator():
             status["is_incubator_running"] = False
     status["result"] = result
     status["error"] = error
-    rasp.set_status(status)
-    db.session.commit()
+    set_rasp_status(status)
+
+
     return jsonify(status), 200
 
 
@@ -290,5 +289,11 @@ def unauthorized():
 #@crontab.job(minute="0")
 #def my_scheduled_job():
 #    output = request_temperature()
+
+
+
+
+
+
 
 
