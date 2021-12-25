@@ -218,10 +218,10 @@ def incubator():
     if len(error) > 0:
         error_message = "".join([line.decode() for line in error])
         set_rasp_status(rasp, {"error" : error_message})
-        if error_message == "no server running on /tmp/tmux-1000/default":
+        if error_message == "no server running on /tmp/tmux-1000/default\n":
             is_incubator_running = False
         else:
-            return jsonify(status), 200
+            return jsonify(status), 501
     if len(result) == 0:
         is_incubator_running = False
     elif "incubator" in str(result[0]):
