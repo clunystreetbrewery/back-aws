@@ -217,15 +217,16 @@ def incubator():
     print("ssh incubator", result, error)
     if len(error) > 0:
         error_message = "".join([line.decode() for line in error])
-        set_rasp_status(rasp, {"error" : error_message})
         if error_message == "no server running on /tmp/tmux-1000/default\n":
             is_incubator_running = False
         else:
+            set_rasp_status(rasp, {"error" : error_message})
             return jsonify(status), 501
     if len(result) == 0:
         is_incubator_running = False
     elif "incubator" in str(result[0]):
         is_incubator_running = True
+    status = {}
     status["is_incubator_running"] = is_incubator_running
     switch = request.args.get('switch')
     if switch is not None:
@@ -245,6 +246,8 @@ def incubator():
             result, error = ssh_to_raspberry(command)
             print("result, error", result, error)
             status["is_incubator_running"] = False
+    status["result"] = result
+    status["error"] = error
     rasp.set_status(status)
     db.session.commit()
     return jsonify(status), 200
