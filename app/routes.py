@@ -215,7 +215,7 @@ def incubator():
     result, error = ssh_to_raspberry(command)
     print("ssh incubator", result, error)
     if len(error) > 0:
-        error_message = "".join([line.decode() for line in error])
+        error_message = error
         print("error_message", error_message)
         if error_message == "no server running on /tmp/tmux-1000/default\n":
             is_incubator_running = False
@@ -226,7 +226,7 @@ def incubator():
         is_incubator_running = False
     elif "incubator" in str(result[0]):
         is_incubator_running = True
-
+        
     status = {}
     status["is_incubator_running"] = is_incubator_running
     switch = request.args.get('switch')
