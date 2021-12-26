@@ -47,8 +47,8 @@ def ssh_to_raspberry(command):
                            shell=False,
                            stdout=subprocess.PIPE,
                            stderr=subprocess.PIPE)
-    result = b"".join(ssh.stdout.readlines())
-    error = b"".join(ssh.stderr.readlines())
+    result = b"".join([line.decode() for line in ssh.stdout.readlines()])
+    error = b"".join([line.decode() for line in ssh.stderr.readlines()])
     return result, error
 
 def dict_factory(cursor, row):
@@ -226,7 +226,7 @@ def incubator():
         is_incubator_running = False
     elif "incubator" in str(result[0]):
         is_incubator_running = True
-        
+
     status = {}
     status["is_incubator_running"] = is_incubator_running
     switch = request.args.get('switch')
