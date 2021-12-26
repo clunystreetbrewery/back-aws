@@ -47,8 +47,8 @@ def ssh_to_raspberry(command):
                            shell=False,
                            stdout=subprocess.PIPE,
                            stderr=subprocess.PIPE)
-    result = b"".join([line.decode() for line in ssh.stdout.readlines()])
-    error = b"".join([line.decode() for line in ssh.stderr.readlines()])
+    result = "".join([line.decode() for line in ssh.stdout.readlines()])
+    error = "".join([line.decode() for line in ssh.stderr.readlines()])
     return result, error
 
 def dict_factory(cursor, row):
