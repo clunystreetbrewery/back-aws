@@ -224,7 +224,7 @@ def incubator():
             return jsonify(status), 501
     if len(result) == 0:
         is_incubator_running = False
-    elif "incubator" in str(result[0]):
+    elif "incubator" in result:
         is_incubator_running = True
 
     status = {}
