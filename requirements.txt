@@ -1,6 +1,6 @@
 alembic==1.6.2
 click==7.1.2
-Flask==1.1.2
+Flask==2.3.2
 Flask-Cors==3.0.10
 flask-crontab==0.1.2
 Flask-HTTPAuth==4.3.0
